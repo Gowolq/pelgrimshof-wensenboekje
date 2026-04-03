@@ -54,8 +54,15 @@ h1,h2,h3,h4,h5,h6{font-family:Gallira,'Poppins',sans-serif;font-weight:400;color
 .nav-item.done .nav-n{border-color:rgba(145,86,63,.5);color:rgba(145,86,63,.7)}
 .nav-check{margin-left:auto;font-size:9px;color:#91563f;opacity:0;transition:opacity .2s}
 .nav-item.done .nav-check{opacity:1}
-.sb-footer{margin-top:auto;padding:16px 22px;border-top:1px solid var(--border);font-size:9.5px;color:var(--muted);line-height:1.7}
-.sb-footer a{color:#91563f;text-decoration:none}
+.sb-footer{margin-top:auto;padding-top:40px}
+.sb-contact-item{display:flex;align-items:center;margin-bottom:18px}
+.sb-contact-icon{width:35px;height:36px;flex-shrink:0;display:flex;align-items:center}
+.sb-contact-icon svg{width:32px;height:32px;color:#91563f}
+.sb-contact-icon img{width:35px;height:36px;object-fit:contain}
+.sb-contact-text{margin-left:12px}
+.sb-contact-text p{font-size:16px;margin:0;color:#e2e3e0;font-family:'Poppins',sans-serif;font-weight:400}
+.sb-contact-text a{font-size:21px;color:#91563f;text-decoration:none;font-family:Kento,'Poppins',sans-serif;font-weight:200;letter-spacing:.5px;transition:opacity .2s}
+.sb-contact-text a:hover{opacity:.8}
 
 /* MAIN */
 .main{margin-left:20.9%;flex:1;min-height:100vh;display:flex;flex-direction:column}
@@ -187,9 +194,24 @@ input::placeholder,textarea::placeholder{color:rgba(255,255,255,.2)}
   </div>
   <ul class="nav-list" id="navList"></ul>
   <div class="sb-footer">
-    <div style="color:var(--gold-l);font-size:10px;margin-bottom:4px;">Pelgrimshof Uitvaartverzorging</div>
-    📞 <a href="tel:0853039797">085 303 97 97</a><br>
-    24/7 bereikbaar
+    <div class="sb-contact-item">
+      <div class="sb-contact-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 10.8 19.79 19.79 0 01.22 2.18 2 2 0 012.2 0h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.72 6.72l1.28-.54a2 2 0 012.11.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+      </div>
+      <div class="sb-contact-text">
+        <p>Telefoon</p>
+        <a href="tel:0853039797">085 303 97 97</a>
+      </div>
+    </div>
+    <div class="sb-contact-item">
+      <div class="sb-contact-icon">
+        <img src="https://www.pelgrimshof.nl/wp-content/themes/pelgrimshof/dist/img/whatsapp.png" alt="WhatsApp">
+      </div>
+      <div class="sb-contact-text">
+        <p>Whatsapp</p>
+        <a href="https://wa.me/31611769612" target="_blank">06 107 696 12</a>
+      </div>
+    </div>
   </div>
 </aside>
 
