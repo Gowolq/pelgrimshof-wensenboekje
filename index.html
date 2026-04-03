@@ -1,1 +1,935 @@
 
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mijn Laatste Wensenboekje – Pelgrimshof</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+@font-face {
+  font-family: Gallira;
+  src: url("https://www.pelgrimshof.nl/fonts/Gallira.woff2") format("woff2"),
+       url("https://www.pelgrimshof.nl/fonts/Gallira.woff") format("woff");
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+:root {
+  --bg:#171919; --bg-card:#1f2121; --bg-card2:#252727;
+  --sidebar:#323628; --sidebar-h:#3d4332;
+  --gold:#aa8453; --gold-l:#e4c29a; --gold-d:#c9a96e;
+  --text:#e2e3e0; --muted:rgba(255,255,255,.45); --white:#fff;
+  --border:rgba(255,255,255,.08); --border-g:rgba(170,132,83,.3);
+  --inp:rgba(255,255,255,.04); --inp-f:rgba(170,132,83,.12);
+  --r:6px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Poppins',Arial,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;overflow-x:hidden}
+h1,h2,h3,h4,h5,h6{font-family:Gallira,'Poppins',sans-serif;font-weight:400;color:var(--white);line-height:1.25}
+
+/* SIDEBAR */
+.sidebar{width:256px;min-width:256px;background:var(--sidebar);position:fixed;top:0;left:0;height:100vh;overflow-y:auto;z-index:100;display:flex;flex-direction:column;scrollbar-width:thin;scrollbar-color:var(--border-g) transparent}
+.sidebar::-webkit-scrollbar{width:3px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border-g);border-radius:2px}
+.logo-wrap{padding:30px 24px 22px;text-align:center;border-bottom:1px solid var(--border)}
+.logo-wrap img{width:44px;margin-bottom:8px;filter:brightness(.95)}
+.brand-name{font-family:Gallira,'Poppins',sans-serif;font-size:20px;letter-spacing:3px;color:var(--gold);text-transform:uppercase;line-height:1}
+.brand-tag{font-size:8.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:300;margin-top:4px}
+.nav-label{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);font-weight:500;padding:18px 24px 6px}
+.nav-list{list-style:none;padding-bottom:20px}
+.nav-item{border-left:2px solid transparent;transition:all .2s}
+.nav-item.active{border-left-color:var(--gold);background:var(--sidebar-h)}
+.nav-item.done .nav-link{color:var(--muted)}
+.nav-link{display:flex;align-items:center;gap:9px;padding:10px 18px 10px 22px;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);cursor:pointer;transition:color .2s;user-select:none}
+.nav-item.active .nav-link{color:var(--gold-l)}
+.nav-link:hover{color:var(--white)}
+.nav-n{width:17px;height:17px;border-radius:50%;border:1px solid currentColor;font-size:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:.6}
+.nav-item.active .nav-n{background:var(--gold);border-color:var(--gold);color:var(--sidebar);opacity:1}
+.nav-item.done .nav-n{background:rgba(170,132,83,.18);border-color:var(--gold);color:var(--gold);opacity:1}
+.nav-check{margin-left:auto;font-size:9px;color:var(--gold);opacity:0;transition:opacity .2s}
+.nav-item.done .nav-check{opacity:1}
+.sb-footer{margin-top:auto;padding:16px 22px;border-top:1px solid var(--border);font-size:9.5px;color:var(--muted);line-height:1.7}
+.sb-footer a{color:var(--gold);text-decoration:none}
+
+/* MAIN */
+.main{margin-left:256px;flex:1;min-height:100vh;display:flex;flex-direction:column}
+.topbar{padding:17px 44px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;background:var(--bg-card)}
+.crumb{font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;align-items:center;gap:7px}
+.crumb b{color:var(--gold-l);font-weight:500}
+.prog-wrap{display:flex;align-items:center;gap:10px;font-size:10.5px;color:var(--muted)}
+.prog-bar{width:110px;height:2px;background:rgba(255,255,255,.08);border-radius:2px;overflow:hidden}
+.prog-fill{height:100%;background:var(--gold);border-radius:2px;transition:width .4s ease}
+.content{flex:1;padding:48px 44px 80px;max-width:740px}
+
+/* SECTIONS */
+.section{display:none}
+.section.active{display:block;animation:fadeUp .3s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.eyebrow{font-size:9.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:10px}
+.eyebrow::after{content:'';flex:1;height:1px;background:var(--border-g)}
+.sec-title{font-size:clamp(30px,4vw,46px);margin-bottom:8px;color:var(--white)}
+.sec-desc{font-size:13.5px;color:var(--muted);line-height:1.75;font-weight:300;max-width:500px;margin-bottom:32px}
+
+/* WELCOME */
+.hero{background:linear-gradient(135deg,var(--sidebar) 0%,rgba(50,54,40,.55) 100%);border:1px solid var(--border-g);border-radius:var(--r);padding:32px 28px;margin-bottom:24px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50px;right:-50px;width:200px;height:200px;border-radius:50%;background:rgba(170,132,83,.05)}
+.hero h3{font-size:20px;margin-bottom:10px;color:var(--gold-l)}
+.hero p{font-size:13px;color:var(--text);line-height:1.75;font-weight:300}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:20px}
+.feat{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--text);font-weight:300}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--r);padding:26px 26px;margin-bottom:14px}
+.card-h{font-family:Gallira,'Poppins',sans-serif;font-size:15px;color:var(--gold-l);margin-bottom:20px;padding-bottom:12px;border-bottom:1px solid var(--border);letter-spacing:.3px}
+
+/* FIELDS */
+.fg{margin-bottom:18px}
+.fg:last-child{margin-bottom:0}
+.lbl{display:block;font-size:10.5px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:7px}
+.lbl.req::after{content:' *';color:var(--gold)}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],input[type=url],select,textarea{
+  width:100%;background:var(--inp);border:1px solid var(--border);border-radius:var(--r);
+  padding:10px 13px;font-family:'Poppins',sans-serif;font-size:13px;color:var(--text);
+  transition:border-color .2s,background .2s;-webkit-appearance:none;appearance:none}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='7'%3E%3Cpath d='M1 1l4.5 4.5L10 1' stroke='%23aa8453' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:36px;cursor:pointer}
+select option{background:#252727;color:var(--text)}
+textarea{resize:vertical;min-height:90px;line-height:1.65}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gold);background:var(--inp-f)}
+input::placeholder,textarea::placeholder{color:rgba(255,255,255,.2)}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:7px}
+.opts-2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.opt{display:flex;align-items:flex-start;gap:11px;padding:10px 13px;border:1px solid var(--border);border-radius:var(--r);cursor:pointer;transition:border-color .15s,background .15s;font-size:12.5px;font-weight:300;color:var(--text);line-height:1.4;user-select:none}
+.opt:hover{border-color:rgba(170,132,83,.4);background:rgba(170,132,83,.04)}
+.opt.on{border-color:var(--gold);background:rgba(170,132,83,.08);color:var(--white)}
+.opt input[type=radio],.opt input[type=checkbox]{width:14px;height:14px;flex-shrink:0;margin-top:2px;accent-color:var(--gold);background:transparent;border:none;padding:0}
+.opt-txt{flex:1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+/* INFO */
+.info{background:rgba(170,132,83,.06);border:1px solid var(--border-g);border-radius:var(--r);padding:13px 15px;font-size:12px;color:var(--muted);line-height:1.7;margin-bottom:18px}
+.info strong{color:var(--gold-l)}
+
+/* BUTTONS */
+.nav-btns{display:flex;align-items:center;justify-content:space-between;margin-top:36px;gap:10px;padding-top:22px;border-top:1px solid var(--border)}
+.btn{font-family:'Poppins',sans-serif;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:12px 28px;border-radius:40px;cursor:pointer;transition:all .2s;border:none;display:inline-flex;align-items:center;gap:7px}
+.btn-p{background:var(--gold);color:var(--bg)}
+.btn-p:hover{background:var(--gold-d);box-shadow:0 5px 20px rgba(170,132,83,.35);transform:translateY(-1px)}
+.btn-o{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-o:hover{border-color:var(--gold);color:var(--gold)}
+.btn-s{background:transparent;color:var(--gold);border:1px solid var(--border-g);font-size:9.5px;padding:9px 18px}
+.btn-s:hover{background:rgba(170,132,83,.08)}
+.btn:disabled{opacity:.3;cursor:not-allowed;transform:none;box-shadow:none}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;right:22px;background:var(--sidebar);border:1px solid var(--border-g);color:var(--text);border-radius:40px;padding:9px 18px;font-size:10.5px;letter-spacing:.06em;display:flex;align-items:center;gap:7px;opacity:0;transform:translateY(8px);transition:all .3s;z-index:999;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+.dot{width:5px;height:5px;border-radius:50%;background:#6bcf7f;flex-shrink:0}
+
+/* SUMMARY */
+.sum-grp{margin-bottom:20px}
+.sum-grp-t{font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:8px;font-weight:500}
+.sum-row{display:flex;justify-content:space-between;gap:14px;padding:8px 0;border-bottom:1px solid var(--border);font-size:12.5px}
+.sum-row:last-child{border-bottom:none}
+.sum-l{color:var(--muted);font-weight:300;flex:1}
+.sum-v{color:var(--white);font-weight:400;text-align:right;flex:1}
+
+/* MOBILE */
+.mob-btn{display:none;position:fixed;top:13px;left:13px;z-index:200;background:var(--sidebar);border:1px solid var(--border-g);border-radius:5px;padding:7px 10px;cursor:pointer;color:var(--gold);font-size:15px;line-height:1}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99}
+
+@media(max-width:860px){
+  .sidebar{transform:translateX(-100%);transition:transform .3s ease}
+  .sidebar.open{transform:translateX(0)}
+  .sb-overlay.open{display:block}
+  .mob-btn{display:flex;align-items:center}
+  .main{margin-left:0}
+  .topbar,.content{padding-left:20px;padding-right:20px}
+  .topbar{padding-left:56px}
+  .grid2{grid-template-columns:1fr}
+  .opts-2{grid-template-columns:1fr}
+  .feat-grid{grid-template-columns:1fr}
+  .nav-btns{flex-direction:column-reverse}
+  .btn{width:100%;justify-content:center}
+}
+@media print{
+  .sidebar,.mob-btn,.topbar,.nav-btns,.toast{display:none!important}
+  .main{margin-left:0}
+  .content{padding:20px;max-width:100%}
+  .section{display:block!important;margin-bottom:44px;page-break-after:always}
+  body{background:#fff;color:#111}
+  .card{background:#fff;border:1px solid #ddd;box-shadow:none}
+  .lbl{color:#555}
+  input,select,textarea{background:#fff;border:1px solid #ccc;color:#111}
+  h1,h2,h3,.card-h,.sec-title{color:#111}
+  .eyebrow{color:#888}
+  .hero{background:#f5f5f0;border:1px solid #ddd}
+  .hero h3{color:#333}
+}
+</style>
+</head>
+<body>
+
+<button class="mob-btn" onclick="toggleSB()" aria-label="Menu">☰</button>
+<div class="sb-overlay" id="overlay" onclick="toggleSB()"></div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo-wrap">
+    <img src="https://www.pelgrimshof.nl/images/logo-icon.svg" onerror="this.style.display='none'" alt="">
+    <div class="brand-name">Pelgrimshof</div>
+    <div class="brand-tag">Zo mooi als het leven</div>
+  </div>
+  <div class="nav-label">Wensenboekje</div>
+  <ul class="nav-list" id="navList"></ul>
+  <div class="sb-footer">
+    <div style="color:var(--gold-l);font-size:10px;margin-bottom:4px;">Pelgrimshof Uitvaartverzorging</div>
+    📞 <a href="tel:0853039797">085 303 97 97</a><br>
+    24/7 bereikbaar
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="crumb">Wensenboekje <span style="color:var(--border-g)">›</span> <b id="secName">Algemeen</b></div>
+    <div class="prog-wrap">
+      <span id="progTxt">1 / 13</span>
+      <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:7.7%"></div></div>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- SECTION 1: ALGEMEEN -->
+    <div class="section active" id="s0">
+      <div class="eyebrow">Stap 1 van 13 — Introductie</div>
+      <h2 class="sec-title">Mijn laatste<br>wensenboekje</h2>
+      <p class="sec-desc">Voor een afscheid zo mooi als het leven. Leg uw wensen vast, zodat uw nabestaanden weten wat uw wensen zijn.</p>
+      <div class="hero">
+        <h3>Welkom bij Pelgrimshof</h3>
+        <p>Dit digitale wensenboekje helpt u uw wensen voor uw uitvaart vast te leggen. Neem de tijd — u kunt op elk moment stoppen en later verder gaan. Alles wordt automatisch opgeslagen.</p>
+        <div class="feat-grid">
+          <div class="feat">💾 <span>Automatisch opgeslagen op uw apparaat</span></div>
+          <div class="feat">🔒 <span>Uw gegevens blijven privé</span></div>
+          <div class="feat">📄 <span>Afdrukbaar als PDF-overzicht</span></div>
+          <div class="feat">✏️ <span>Op elk moment aanpasbaar</span></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">Reden van invullen</div>
+        <div class="fg">
+          <label class="lbl req">Wat is de reden waarom u dit wensenboekje invult?</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="reden" value="wensen"><span class="opt-txt">Om mijn wensen voor mijn afscheidsdienst vast te leggen, zodat het afscheid zoveel mogelijk verloopt zoals ik dat voor ogen heb</span></label>
+            <label class="opt"><input type="radio" name="reden" value="korte_termijn"><span class="opt-txt">Omdat er mogelijk op korte termijn een overlijden wordt verwacht</span></label>
+            <label class="opt"><input type="radio" name="reden" value="kosten"><span class="opt-txt">Omdat ik graag vooraf inzicht wil krijgen in de kosten van een uitvaart</span></label>
+            <label class="opt"><input type="radio" name="reden" value="anders"><span class="opt-txt">Anders, namelijk:</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Hoe heeft u Pelgrimshof gevonden?</label>
+          <input type="text" data-k="bron" placeholder="Bijv. Google, via vrienden, krant…">
+        </div>
+      </div>
+      <div class="nav-btns"><div></div><button class="btn btn-p" onclick="go(1)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 2: UITVAARTZORG -->
+    <div class="section" id="s1">
+      <div class="eyebrow">Stap 2 van 13</div>
+      <h2 class="sec-title">Uitvaartzorg</h2>
+      <p class="sec-desc">Geef aan hoe uw uitvaart geregeld dient te worden en wat uw voorkeur is.</p>
+      <div class="card">
+        <div class="card-h">Verzorging &amp; hoofdwens</div>
+        <div class="fg">
+          <label class="lbl">Het is mijn wens dat de gehele uitvaart wordt verzorgd door:</label>
+          <select data-k="uitvaart_door">
+            <option value="">— Maak een keuze —</option>
+            <option>Pelgrimshof Uitvaartverzorging &amp; Crematorium</option>
+            <option>Anders, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Het is mijn wens dat ik word:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="uitv_type" value="gecremeerd"><span class="opt-txt">Gecremeerd</span></label>
+            <label class="opt"><input type="radio" name="uitv_type" value="begraven"><span class="opt-txt">Begraven</span></label>
+            <label class="opt"><input type="radio" name="uitv_type" value="wetenschap"><span class="opt-txt">Ik wil mijn lichaam na overlijden schenken aan de wetenschap</span></label>
+            <label class="opt"><input type="radio" name="uitv_type" value="nabestaanden"><span class="opt-txt">Ik laat de keuze aan mijn nabestaanden</span></label>
+            <label class="opt"><input type="radio" name="uitv_type" value="resomeren"><span class="opt-txt">Resomeren / Resomatie (op dit moment in Nederland nog niet mogelijk)</span></label>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="begrCard" style="display:none">
+        <div class="card-h">Begraving — details</div>
+        <div class="fg">
+          <label class="lbl">Het betreft een:</label>
+          <select data-k="graf_type">
+            <option value="">— Maak een keuze —</option>
+            <option>Nieuw algemeen graf</option><option>Nieuw particulier graf</option>
+            <option>Nieuw natuurgraf</option><option>Bijzetting in bestaand graf</option>
+            <option>Ik laat de keuze aan mijn nabestaanden</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Begraafplaats voorkeur:</label>
+          <select data-k="begraafplaats">
+            <option value="">— Geen voorkeur —</option>
+            <option>Begraafplaats Gemert (Den Dungen)</option><option>Begraafplaats Boekel</option>
+            <option>Begraafplaats Bakel</option><option>Begraafplaats Handel</option>
+            <option>Begraafplaats Elsendorp</option><option>Ik laat dit aan mijn nabestaanden over</option>
+            <option>Anders, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Ik wens te worden begraven op de volgende natuurbegraafplaats:</label>
+          <select data-k="natuur_bp">
+            <option value="">— Niet van toepassing —</option>
+            <option>Natuurbegraafplaats Gemert</option><option>Andere natuurbegraafplaats, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Bijzetting in bestaand graf — locatie &amp; grafnummer:</label>
+          <div class="grid2">
+            <input type="text" data-k="graf_begraafplaats" placeholder="Begraafplaats">
+            <input type="text" data-k="grafnummer" placeholder="Grafnummer">
+          </div>
+        </div>
+      </div>
+      <div class="card" id="cremCard" style="display:none">
+        <div class="card-h">Crematie — details</div>
+        <div class="fg">
+          <label class="lbl">Voorkeur crematorium:</label>
+          <select data-k="crematorium">
+            <option value="">— Geen voorkeur —</option>
+            <option>Pelgrimshof Crematorium Gemert</option>
+            <option>Pelgrimshof Crematorium Schijndel (vanaf augustus 2026)</option>
+            <option>Ik laat dit aan mijn nabestaanden over</option>
+            <option>Anders, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Wens met betrekking tot de as na crematie:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="as_wens" value="urn_thuis"><span class="opt-txt">As bewaren in een urn thuis</span></label>
+            <label class="opt"><input type="radio" name="as_wens" value="uitstrooien"><span class="opt-txt">As uitstrooien op een speciale locatie</span></label>
+            <label class="opt"><input type="radio" name="as_wens" value="bijzetten"><span class="opt-txt">As bijzetten op het crematorium</span></label>
+            <label class="opt"><input type="radio" name="as_wens" value="object"><span class="opt-txt">As verwerken in een herinneringsobject</span></label>
+            <label class="opt"><input type="radio" name="as_wens" value="nabestaanden"><span class="opt-txt">Ik laat dit aan mijn nabestaanden over</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Mijn wens is dat bij mijn crematie, een dierbaar begraven familielid ook wordt gecremeerd:</label>
+          <select data-k="fam_cremeren" id="famCremSel">
+            <option value="">— Niet van toepassing —</option>
+            <option>Nee</option><option>Ja, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg" id="famDetails" style="display:none">
+          <label class="lbl">Begraafplaats &amp; grafnummer van dit familielid:</label>
+          <div class="grid2">
+            <input type="text" data-k="fam_bp" placeholder="Begraafplaats">
+            <input type="text" data-k="fam_gnr" placeholder="Grafnummer">
+          </div>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(0)">← Terug</button><button class="btn btn-p" onclick="go(2)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 3: AFSCHEIDSDIENST -->
+    <div class="section" id="s2">
+      <div class="eyebrow">Stap 3 van 13</div>
+      <h2 class="sec-title">Afscheidsdienst</h2>
+      <p class="sec-desc">Hoe stelt u zich uw afscheidsdienst voor?</p>
+      <div class="card">
+        <div class="card-h">Soort dienst</div>
+        <div class="fg">
+          <label class="lbl">Mijn voorkeur voor de plechtigheid:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="dienst" value="besloten"><span class="opt-txt">Besloten plechtigheid (alleen familie en naaste vrienden)</span></label>
+            <label class="opt"><input type="radio" name="dienst" value="openbaar"><span class="opt-txt">Openbare plechtigheid (iedereen is welkom)</span></label>
+            <label class="opt"><input type="radio" name="dienst" value="geen"><span class="opt-txt">Geen plechtigheid / sober afscheid</span></label>
+            <label class="opt"><input type="radio" name="dienst" value="nabestaanden"><span class="opt-txt">Ik laat dit aan mijn nabestaanden over</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Locatie van de dienst:</label>
+          <select data-k="dienst_loc">
+            <option value="">— Maak een keuze —</option>
+            <option>Pelgrimshof Gemert</option><option>Pelgrimshof Schijndel (vanaf augustus 2026)</option>
+            <option>Kerk</option><option>Aula begraafplaats</option><option>Thuis</option>
+            <option>Ik laat dit aan mijn nabestaanden over</option><option>Anders, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Bijzondere wensen voor de dienst:</label>
+          <textarea data-k="dienst_wensen" placeholder="Beschrijf uw wensen voor de afscheidsdienst…"></textarea>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">Religieus / levensbeschouwelijk</div>
+        <div class="fg">
+          <label class="lbl">Heeft de dienst een religieus of levensbeschouwelijk karakter?</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="religie" value="rk"><span class="opt-txt">Rooms-katholiek</span></label>
+            <label class="opt"><input type="radio" name="religie" value="prot"><span class="opt-txt">Protestants</span></label>
+            <label class="opt"><input type="radio" name="religie" value="human"><span class="opt-txt">Humanistisch</span></label>
+            <label class="opt"><input type="radio" name="religie" value="neutraal"><span class="opt-txt">Niet-religieus / neutraal</span></label>
+            <label class="opt"><input type="radio" name="religie" value="nabestaanden"><span class="opt-txt">Ik laat dit aan mijn nabestaanden over</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Gewenste voorganger (bijv. priester, dominee, humanistisch begeleider):</label>
+          <input type="text" data-k="voorganger" placeholder="Naam of omschrijving">
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(1)">← Terug</button><button class="btn btn-p" onclick="go(3)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 4: UITVAARTKIST -->
+    <div class="section" id="s3">
+      <div class="eyebrow">Stap 4 van 13</div>
+      <h2 class="sec-title">Uitvaartkist</h2>
+      <p class="sec-desc">Geef uw voorkeur aan voor de kist en wat u wenst mee te nemen.</p>
+      <div class="card">
+        <div class="card-h">Kist &amp; kledij</div>
+        <div class="fg">
+          <label class="lbl">Mijn voorkeur voor de uitvaartkist:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="kist" value="eenvoudig"><span class="opt-txt">Eenvoudige kist</span></label>
+            <label class="opt"><input type="radio" name="kist" value="standaard"><span class="opt-txt">Standaard kist</span></label>
+            <label class="opt"><input type="radio" name="kist" value="luxe"><span class="opt-txt">Luxe / bijzondere kist</span></label>
+            <label class="opt"><input type="radio" name="kist" value="eco"><span class="opt-txt">Eco-kist / milieuvriendelijke kist</span></label>
+            <label class="opt"><input type="radio" name="kist" value="nabestaanden"><span class="opt-txt">Ik laat de keuze aan mijn nabestaanden</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Kleur / uitvoering van de kist:</label>
+          <select data-k="kist_kleur">
+            <option value="">— Geen voorkeur —</option>
+            <option>Naturel / houtkleur</option><option>Wit</option>
+            <option>Donker (wengé / mahonie)</option>
+            <option>Ik laat dit aan mijn nabestaanden over</option>
+            <option>Anders, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Kledij waarmee ik begraven of gecremeerd wil worden:</label>
+          <textarea data-k="kledij" placeholder="Bijv. mijn favoriete pak, jurk, casual kleding…" style="min-height:75px"></textarea>
+        </div>
+        <div class="fg">
+          <label class="lbl">Persoonlijke objecten die mee moeten (sieraden, boek, etc.):</label>
+          <textarea data-k="mee_objecten" placeholder="Bijv. trouwring, ketting, favoriete boek…" style="min-height:75px"></textarea>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(2)">← Terug</button><button class="btn btn-p" onclick="go(4)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 5: OPBAREN -->
+    <div class="section" id="s4">
+      <div class="eyebrow">Stap 5 van 13</div>
+      <h2 class="sec-title">Opbaren</h2>
+      <p class="sec-desc">Geef aan hoe en waar u opgebaard wenst te worden.</p>
+      <div class="card">
+        <div class="card-h">Opbaring wensen</div>
+        <div class="fg">
+          <label class="lbl">Mijn wens voor opbaring:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="opbaren" value="thuis"><span class="opt-txt">Thuis opgebaard</span></label>
+            <label class="opt"><input type="radio" name="opbaren" value="pelgrimshof"><span class="opt-txt">In de suite van Pelgrimshof</span></label>
+            <label class="opt"><input type="radio" name="opbaren" value="geen"><span class="opt-txt">Ik wil niet worden opgebaard</span></label>
+            <label class="opt"><input type="radio" name="opbaren" value="nabestaanden"><span class="opt-txt">Ik laat dit aan mijn nabestaanden over</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Wens met betrekking tot bezoek bij opbaring:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="bezoek_opb" value="iedereen"><span class="opt-txt">Iedereen is welkom</span></label>
+            <label class="opt"><input type="radio" name="bezoek_opb" value="besloten"><span class="opt-txt">Alleen familie en goede vrienden</span></label>
+            <label class="opt"><input type="radio" name="bezoek_opb" value="geen"><span class="opt-txt">Geen bezoek</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Bijzondere wensen rondom de opbaring:</label>
+          <textarea data-k="opbaren_wensen" placeholder="Bijv. muziek, bloemen, verlichting, specifieke kamer…" style="min-height:75px"></textarea>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(3)">← Terug</button><button class="btn btn-p" onclick="go(5)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 6: DRUKWERK -->
+    <div class="section" id="s5">
+      <div class="eyebrow">Stap 6 van 13</div>
+      <h2 class="sec-title">Drukwerk</h2>
+      <p class="sec-desc">Uw wensen voor rouwkaarten, aankondigingen en gedachtenisprentjes.</p>
+      <div class="card">
+        <div class="card-h">Kaarten &amp; prentjes</div>
+        <div class="fg">
+          <label class="lbl">Rouwkaart / aankondiging:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="rouwkaart" value="ja"><span class="opt-txt">Ja, ik wil een rouwkaart laten versturen</span></label>
+            <label class="opt"><input type="radio" name="rouwkaart" value="nee"><span class="opt-txt">Nee, geen rouwkaart</span></label>
+            <label class="opt"><input type="radio" name="rouwkaart" value="nabestaanden"><span class="opt-txt">Ik laat dit aan mijn nabestaanden over</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Bidprentje / gedachtenisprentje:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="bidprentje" value="ja"><span class="opt-txt">Ja, ik wil een bidprentje</span></label>
+            <label class="opt"><input type="radio" name="bidprentje" value="nee"><span class="opt-txt">Nee, geen bidprentje</span></label>
+            <label class="opt"><input type="radio" name="bidprentje" value="nabestaanden"><span class="opt-txt">Ik laat dit aan mijn nabestaanden over</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Tekst, gedicht of bijbelvers voor op de kaart / het prentje:</label>
+          <textarea data-k="kaart_tekst" placeholder="Bijv. een favoriet gedicht, bijbelvers of persoonlijke tekst…"></textarea>
+        </div>
+        <div class="fg">
+          <label class="lbl">Foto die gebruikt mag worden (omschrijving):</label>
+          <input type="text" data-k="foto_omschr" placeholder="Bijv. 'portretfoto uit 2020', 'familiefoto vakantie'">
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(4)">← Terug</button><button class="btn btn-p" onclick="go(6)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 7: INVULLING AFSCHEIDSDIENST -->
+    <div class="section" id="s6">
+      <div class="eyebrow">Stap 7 van 13</div>
+      <h2 class="sec-title">Invulling dienst</h2>
+      <p class="sec-desc">Muziek, bloemen en verdere wensen voor de invulling van de afscheidsdienst.</p>
+      <div class="card">
+        <div class="card-h">Muziek</div>
+        <div class="fg">
+          <label class="lbl">Gewenste muziek tijdens de dienst:</label>
+          <textarea data-k="muziek" placeholder="Bijv. liedjes, artiesten, stijl van muziek…" style="min-height:75px"></textarea>
+        </div>
+        <div class="fg">
+          <label class="lbl">Ik zou graag live-muziek willen van:</label>
+          <input type="text" data-k="live_muziek" placeholder="Bijv. koor, organist, zangeres…">
+        </div>
+        <div class="fg">
+          <label class="lbl">Spotify-afspeellijst (URL):</label>
+          <input type="url" data-k="spotify" placeholder="https://open.spotify.com/playlist/…">
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">Bloemen</div>
+        <div class="fg">
+          <label class="lbl">Wens met betrekking tot bloemen:</label>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="bloemen" value="graag"><span class="opt-txt">Ik wil graag bloemen</span></label>
+            <label class="opt"><input type="radio" name="bloemen" value="enkele"><span class="opt-txt">Ik wil graag enkele bloemstukken</span></label>
+            <label class="opt"><input type="radio" name="bloemen" value="los"><span class="opt-txt">Ik wil alleen losse bloemen</span></label>
+            <label class="opt"><input type="radio" name="bloemen" value="band"><span class="opt-txt">Ik wil een bloemenband</span></label>
+            <label class="opt"><input type="radio" name="bloemen" value="geen"><span class="opt-txt">Nee, ik wil geen bloemen</span></label>
+            <label class="opt"><input type="radio" name="bloemen" value="donatie"><span class="opt-txt">In plaats van bloemen: donatie aan een goed doel</span></label>
+            <label class="opt"><input type="radio" name="bloemen" value="nabestaanden"><span class="opt-txt">Ik laat de keuze aan mijn nabestaanden</span></label>
+          </div>
+        </div>
+        <div class="fg" id="donatieDoel" style="display:none">
+          <label class="lbl">Goed doel voor de bloemendonatie:</label>
+          <input type="text" data-k="donatie_org" placeholder="Naam van het goede doel">
+        </div>
+        <div class="grid2">
+          <div class="fg">
+            <label class="lbl">Voorkeursbloem:</label>
+            <select data-k="voorkeursbloem">
+              <option value="">— Geen voorkeur —</option>
+              <option>Agapanthus</option><option>Allium</option><option>Alstroemeria</option><option>Amaryllis</option>
+              <option>Anemoon</option><option>Anjer</option><option>Anthurium</option><option>Chrysant</option>
+              <option>Dahlia</option><option>Freesia</option><option>Gerbera</option><option>Gladiool</option>
+              <option>Hortensia</option><option>Hyacint</option><option>Iris</option><option>Lelie</option>
+              <option>Narcis</option><option>Orchidee</option><option>Pioenroos</option><option>Ranonkel</option>
+              <option>Roos</option><option>Strelitzia</option><option>Tulp</option><option>Zonnebloem</option>
+            </select>
+          </div>
+          <div class="fg">
+            <label class="lbl">Lievelingskleur bloemen:</label>
+            <select data-k="bloem_kleur">
+              <option value="">— Geen voorkeur —</option>
+              <option>Blauw</option><option>Crème</option><option>Fuchsia</option><option>Geel</option>
+              <option>Groen</option><option>Oranje</option><option>Paars</option><option>Rood</option>
+              <option>Roze</option><option>Wit</option><option>Zalm</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">Sprekers &amp; overige wensen</div>
+        <div class="fg">
+          <label class="lbl">Spreker(s) tijdens de dienst:</label>
+          <textarea data-k="sprekers" placeholder="Wie wil u graag het woord laten voeren? (naam, relatie)" style="min-height:75px"></textarea>
+        </div>
+        <div class="fg">
+          <label class="lbl">Overige wensen rondom de invulling van de dienst:</label>
+          <textarea data-k="dienst_overig" placeholder="Bijv. dia-show, video, condoleanceregister, gedicht, kaarsje…"></textarea>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(5)">← Terug</button><button class="btn btn-p" onclick="go(7)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 8: UITVAARTONDERNEMER -->
+    <div class="section" id="s7">
+      <div class="eyebrow">Stap 8 van 13</div>
+      <h2 class="sec-title">Uitvaartondernemer</h2>
+      <p class="sec-desc">Voorkeur voor de begeleiding door Pelgrimshof.</p>
+      <div class="card">
+        <div class="card-h">Voorkeur begeleider</div>
+        <div class="fg">
+          <label class="lbl">Heeft u een voorkeur voor een specifieke begeleider bij Pelgrimshof?</label>
+          <input type="text" data-k="begeleider" placeholder="Naam van de gewenste begeleider">
+        </div>
+        <div class="fg">
+          <label class="lbl">Bijzonderheden voor de uitvaartondernemer:</label>
+          <textarea data-k="ondernemer_notities" placeholder="Bijv. specifieke afspraken, voorkeur voor contact, taalvoorkeur…"></textarea>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(6)">← Terug</button><button class="btn btn-p" onclick="go(8)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 9: PERSOONLIJKE GEGEVENS -->
+    <div class="section" id="s8">
+      <div class="eyebrow">Stap 9 van 13</div>
+      <h2 class="sec-title">Persoonlijke gegevens</h2>
+      <p class="sec-desc">Uw persoonlijke gegevens voor het wensenboekje.</p>
+      <div class="card">
+        <div class="card-h">Persoonsgegevens</div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl req">Voornaam</label><input type="text" data-k="voornaam" placeholder="Voornaam"></div>
+          <div class="fg"><label class="lbl">Tussenvoegsel</label><input type="text" data-k="tussenvoegsel" placeholder="Van / de / etc."></div>
+        </div>
+        <div class="fg"><label class="lbl req">Achternaam</label><input type="text" data-k="achternaam" placeholder="Achternaam"></div>
+        <div class="fg"><label class="lbl">Roepnaam</label><input type="text" data-k="roepnaam" placeholder="Hoe bent u bekend?"></div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl">Geboortedatum</label><input type="date" data-k="geboortedatum"></div>
+          <div class="fg"><label class="lbl">Geboorteplaats</label><input type="text" data-k="geboorteplaats" placeholder="Geboorteplaats"></div>
+        </div>
+        <div class="fg"><label class="lbl">Adres</label><input type="text" data-k="adres" placeholder="Straat en huisnummer"></div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl">Postcode</label><input type="text" data-k="postcode" placeholder="1234 AB"></div>
+          <div class="fg"><label class="lbl">Woonplaats</label><input type="text" data-k="woonplaats" placeholder="Woonplaats"></div>
+        </div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl">Telefoonnummer</label><input type="tel" data-k="telefoon" placeholder="06 12345678"></div>
+          <div class="fg"><label class="lbl">E-mailadres</label><input type="email" data-k="email" placeholder="uw@emailadres.nl"></div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Burgerlijke staat</label>
+          <select data-k="burgerlijkestaat">
+            <option value="">— Maak een keuze —</option>
+            <option>Gehuwd</option><option>Samenwonend / geregistreerd partnerschap</option>
+            <option>Alleenstaand</option><option>Weduwe / Weduwnaar</option><option>Gescheiden</option>
+          </select>
+        </div>
+        <div class="fg"><label class="lbl">Naam partner</label><input type="text" data-k="partner_naam" placeholder="Naam van uw partner (indien van toepassing)"></div>
+        <div class="fg"><label class="lbl">Beroep (huidig of voormalig)</label><input type="text" data-k="beroep" placeholder="Bijv. verpleegkundige, leraar, ondernemer…"></div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(7)">← Terug</button><button class="btn btn-p" onclick="go(9)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 10: KINDEREN -->
+    <div class="section" id="s9">
+      <div class="eyebrow">Stap 10 van 13</div>
+      <h2 class="sec-title">Kinderen</h2>
+      <p class="sec-desc">Gegevens van uw kinderen, indien van toepassing.</p>
+      <div class="card">
+        <div class="card-h">Kinderen</div>
+        <div class="fg">
+          <label class="lbl">Heeft u kinderen?</label>
+          <div class="opts" style="flex-direction:row;gap:10px">
+            <label class="opt" style="flex:1"><input type="radio" name="heeft_kind" value="ja"><span class="opt-txt">Ja</span></label>
+            <label class="opt" style="flex:1"><input type="radio" name="heeft_kind" value="nee"><span class="opt-txt">Nee</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Gegevens van uw kinderen (naam, geboortedatum, woonplaats):</label>
+          <div class="info"><strong>Vul per regel één kind in.</strong> Bijv.: Jan Jansen, 01-01-1980, Amsterdam</div>
+          <textarea data-k="kinderen_info" placeholder="Kind 1: Naam, geboortedatum, woonplaats&#10;Kind 2: …" style="min-height:120px"></textarea>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(8)">← Terug</button><button class="btn btn-p" onclick="go(10)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 11: CONTACTPERSONEN -->
+    <div class="section" id="s10">
+      <div class="eyebrow">Stap 11 van 13</div>
+      <h2 class="sec-title">Contactpersonen</h2>
+      <p class="sec-desc">Wie moeten er geïnformeerd worden bij overlijden?</p>
+      <div class="card">
+        <div class="card-h">Eerste contactpersoon</div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl req">Naam</label><input type="text" data-k="c1_naam" placeholder="Volledige naam"></div>
+          <div class="fg"><label class="lbl">Relatie</label><input type="text" data-k="c1_relatie" placeholder="Bijv. dochter, echtgenoot…"></div>
+        </div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl">Telefoon</label><input type="tel" data-k="c1_tel" placeholder="06 12345678"></div>
+          <div class="fg"><label class="lbl">E-mail</label><input type="email" data-k="c1_email" placeholder="email@adres.nl"></div>
+        </div>
+        <div class="fg"><label class="lbl">Adres</label><input type="text" data-k="c1_adres" placeholder="Straat, postcode, woonplaats"></div>
+      </div>
+      <div class="card">
+        <div class="card-h">Tweede contactpersoon</div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl">Naam</label><input type="text" data-k="c2_naam" placeholder="Volledige naam"></div>
+          <div class="fg"><label class="lbl">Relatie</label><input type="text" data-k="c2_relatie" placeholder="Bijv. zoon, broer…"></div>
+        </div>
+        <div class="grid2">
+          <div class="fg"><label class="lbl">Telefoon</label><input type="tel" data-k="c2_tel" placeholder="06 12345678"></div>
+          <div class="fg"><label class="lbl">E-mail</label><input type="email" data-k="c2_email" placeholder="email@adres.nl"></div>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(9)">← Terug</button><button class="btn btn-p" onclick="go(11)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 12: BELANGRIJKE DOCUMENTEN -->
+    <div class="section" id="s11">
+      <div class="eyebrow">Stap 12 van 13</div>
+      <h2 class="sec-title">Belangrijke documenten</h2>
+      <p class="sec-desc">Uitvaartverzekering, testament en overige relevante documenten.</p>
+      <div class="card">
+        <div class="card-h">Uitvaartverzekering</div>
+        <div class="grid2">
+          <div class="fg">
+            <label class="lbl">Verzekeringsmaatschappij</label>
+            <select data-k="verzekering1">
+              <option value="">— Geen / onbekend —</option>
+              <option>Ardanta</option><option>Dela</option><option>Drentse Uitvaartverzekering</option>
+              <option>Eerste Algemeene</option><option>Eirene</option><option>Friesland Uitvaartverzekering</option>
+              <option>Goudse</option><option>Groninger Begrafenisvereniging</option>
+              <option>Monuta</option><option>NUVEMA</option><option>Uitvaartverzekering.nl</option>
+              <option>Yarden</option><option>ZuidHollands Effectenkantoor</option>
+              <option>Anders, namelijk:</option>
+            </select>
+          </div>
+          <div class="fg"><label class="lbl">Polisnummer</label><input type="text" data-k="polisnr1" placeholder="Polisnummer"></div>
+        </div>
+        <div class="grid2">
+          <div class="fg">
+            <label class="lbl">Tweede verzekeringsmaatschappij</label>
+            <select data-k="verzekering2">
+              <option value="">— Niet van toepassing —</option>
+              <option>Ardanta</option><option>Dela</option><option>Eirene</option>
+              <option>Monuta</option><option>Yarden</option><option>Anders, namelijk:</option>
+            </select>
+          </div>
+          <div class="fg"><label class="lbl">Polisnummer 2</label><input type="text" data-k="polisnr2" placeholder="Polisnummer"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">Testament &amp; notaris</div>
+        <div class="fg">
+          <label class="lbl">Heeft u een testament?</label>
+          <div class="opts" style="flex-direction:row;gap:10px">
+            <label class="opt" style="flex:1"><input type="radio" name="testament" value="ja"><span class="opt-txt">Ja</span></label>
+            <label class="opt" style="flex:1"><input type="radio" name="testament" value="nee"><span class="opt-txt">Nee</span></label>
+          </div>
+        </div>
+        <div class="fg">
+          <label class="lbl">Notariskantoor</label>
+          <select data-k="notaris">
+            <option value="">— Niet van toepassing / onbekend —</option>
+            <option>AKTIE Notarissen</option><option>Actor Notarissen</option><option>Beks Notarissen</option>
+            <option>Bierens Notariaat</option><option>De Kerf &amp; Van Diepen Notarissen</option>
+            <option>Demas Notarissen</option><option>Dielissen en Altena Notarissen</option>
+            <option>Haans Notarissen</option><option>Hermans Notarissen</option>
+            <option>Koppenberg Notarissen</option><option>Van Asseldonk Notarissen</option>
+            <option>Anders, namelijk:</option>
+          </select>
+        </div>
+        <div class="fg">
+          <label class="lbl">Waar bevinden zich het testament en andere belangrijke documenten?</label>
+          <textarea data-k="doc_locatie" placeholder="Bijv. thuis in de kluis, bij de notaris, bij mijn dochter…" style="min-height:75px"></textarea>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(10)">← Terug</button><button class="btn btn-p" onclick="go(12)">Volgende →</button></div>
+    </div>
+
+    <!-- SECTION 13: SLOTWOORD -->
+    <div class="section" id="s12">
+      <div class="eyebrow">Stap 13 van 13 — Afsluiting</div>
+      <h2 class="sec-title">Slotwoord</h2>
+      <p class="sec-desc">Ruimte voor uw persoonlijke boodschap aan uw nabestaanden.</p>
+      <div class="card">
+        <div class="card-h">Persoonlijke boodschap</div>
+        <div class="info"><strong>Dit is uw ruimte.</strong> Schrijf hier wat u kwijt wilt aan uw nabestaanden — een boodschap, dankwoord, herinnering of wens voor de toekomst.</div>
+        <div class="fg">
+          <label class="lbl">Mijn boodschap aan mijn nabestaanden:</label>
+          <textarea data-k="slotwoord" placeholder="Schrijf hier uw persoonlijke boodschap…" style="min-height:180px"></textarea>
+        </div>
+        <div class="fg">
+          <label class="lbl">Overige aanvullende wensen of opmerkingen:</label>
+          <textarea data-k="overige_opm" placeholder="Eventuele andere wensen die nog niet aan bod zijn gekomen…"></textarea>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-h">Uw overzicht</div>
+        <div id="sumView"></div>
+        <div style="display:flex;gap:10px;margin-top:20px;flex-wrap:wrap">
+          <button class="btn btn-p" onclick="window.print()">🖨 Afdrukken / PDF opslaan</button>
+          <button class="btn btn-s" onclick="save()">💾 Opslaan</button>
+        </div>
+      </div>
+      <div class="nav-btns"><button class="btn btn-o" onclick="go(11)">← Terug</button><div></div></div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<div class="toast" id="toast"><div class="dot"></div><span>Gegevens opgeslagen</span></div>
+
+<script>
+const SECS=['Algemeen','Uitvaartzorg','Afscheidsdienst','Uitvaartkist','Opbaren','Drukwerk','Invulling dienst','Uitvaartondernemer','Persoonlijke gegevens','Kinderen','Contactpersonen','Belangrijke documenten','Slotwoord'];
+let cur=0, fd={};
+
+document.addEventListener('DOMContentLoaded',()=>{
+  buildNav(); load(); bindAll(); bindCond(); show(0);
+});
+
+function buildNav(){
+  document.getElementById('navList').innerHTML=SECS.map((n,i)=>`
+    <li class="nav-item" id="ni${i}">
+      <div class="nav-link" onclick="go(${i})">
+        <span class="nav-n">${i+1}</span><span>${n}</span><span class="nav-check">✓</span>
+      </div>
+    </li>`).join('');
+}
+
+function show(i){
+  if(i<0||i>=SECS.length)return;
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('s'+i).classList.add('active');
+  document.getElementById('ni'+i).classList.add('active');
+  cur=i;
+  document.getElementById('secName').textContent=SECS[i];
+  document.getElementById('progTxt').textContent=`${i+1} / ${SECS.length}`;
+  document.getElementById('progFill').style.width=`${((i+1)/SECS.length)*100}%`;
+  if(i===SECS.length-1) buildSum();
+  window.scrollTo({top:0,behavior:'smooth'});
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+  // Scroll sidebar nav item into view
+  document.getElementById('ni'+i)?.scrollIntoView({block:'nearest',behavior:'smooth'});
+}
+
+function go(i){
+  save(); markDone(cur); show(i);
+}
+function markDone(i){
+  const el=document.getElementById('ni'+i);
+  if(el) el.classList.add('done');
+}
+
+function bindAll(){
+  document.querySelectorAll('[data-k]').forEach(el=>{
+    el.addEventListener('input',()=>{fd[el.dataset.k]=el.value;sched();});
+    el.addEventListener('change',()=>{fd[el.dataset.k]=el.value;sched();});
+  });
+  document.querySelectorAll('.opt input[type=radio],.opt input[type=checkbox]').forEach(inp=>{
+    inp.addEventListener('change',()=>{
+      if(inp.type==='radio'){
+        document.querySelectorAll(`input[name="${inp.name}"]`).forEach(r=>r.closest('.opt')?.classList.remove('on'));
+      }
+      if(inp.checked) inp.closest('.opt')?.classList.add('on');
+      else inp.closest('.opt')?.classList.remove('on');
+      fd[inp.name||inp.id]=inp.checked?inp.value:'';
+      sched();
+    });
+  });
+}
+
+function bindCond(){
+  // Cremeren vs begraven
+  document.querySelectorAll('input[name="uitv_type"]').forEach(r=>{
+    r.addEventListener('change',()=>{
+      const b=document.getElementById('begrCard');
+      const c=document.getElementById('cremCard');
+      if(b) b.style.display=(r.value==='begraven')?'block':'none';
+      if(c) c.style.display=(r.value==='gecremeerd')?'block':'none';
+    });
+  });
+  // Familielid cremeren
+  const fs=document.getElementById('famCremSel');
+  if(fs) fs.addEventListener('change',()=>{
+    const d=document.getElementById('famDetails');
+    if(d) d.style.display=fs.value.startsWith('Ja')?'block':'none';
+  });
+  // Bloemen donatie
+  document.querySelectorAll('input[name="bloemen"]').forEach(r=>{
+    r.addEventListener('change',()=>{
+      const d=document.getElementById('donatieDoel');
+      if(d) d.style.display=(r.value==='donatie')?'block':'none';
+    });
+  });
+}
+
+let st;
+function sched(){clearTimeout(st);st=setTimeout(save,1400);}
+
+function save(){
+  document.querySelectorAll('[data-k]').forEach(el=>{fd[el.dataset.k]=el.value;});
+  document.querySelectorAll('input[type="radio"]:checked').forEach(r=>{fd[r.name]=r.value;});
+  try{localStorage.setItem('ph_wb',JSON.stringify(fd));toast();}catch(e){}
+}
+
+function load(){
+  try{
+    const s=localStorage.getItem('ph_wb');
+    if(!s)return;
+    fd=JSON.parse(s);
+    document.querySelectorAll('[data-k]').forEach(el=>{
+      if(fd[el.dataset.k]!==undefined) el.value=fd[el.dataset.k];
+    });
+    Object.entries(fd).forEach(([n,v])=>{
+      const r=document.querySelector(`input[name="${n}"][value="${v}"]`);
+      if(r){r.checked=true;r.closest('.opt')?.classList.add('on');r.dispatchEvent(new Event('change'));}
+    });
+  }catch(e){}
+}
+
+let tt;
+function toast(){
+  const t=document.getElementById('toast');
+  t.classList.add('show');
+  clearTimeout(tt);
+  tt=setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function buildSum(){
+  const g=(k)=>fd[k]||'';
+  const rows=[
+    ['Uitvaartzorg',[
+      ['Gecremeerd / begraven',g('uitv_type')],
+      ['Verzorgd door',g('uitvaart_door')],
+    ]],
+    ['Persoonlijke gegevens',[
+      ['Naam',[g('voornaam'),g('tussenvoegsel'),g('achternaam')].filter(Boolean).join(' ')],
+      ['Geboortedatum',g('geboortedatum')],
+      ['Adres',[g('adres'),g('postcode'),g('woonplaats')].filter(Boolean).join(', ')],
+      ['Telefoon',g('telefoon')],['E-mail',g('email')],
+    ]],
+    ['Afscheid',[
+      ['Dienst',g('dienst')],['Bloemen',g('bloemen')],
+    ]],
+    ['Contactpersoon',[
+      ['Naam',g('c1_naam')],['Relatie',g('c1_relatie')],['Telefoon',g('c1_tel')],
+    ]],
+    ['Verzekering',[
+      ['Maatschappij',g('verzekering1')],['Polisnummer',g('polisnr1')],['Testament',g('testament')],
+    ]],
+  ];
+  document.getElementById('sumView').innerHTML=rows.map(([t,fs])=>{
+    const r=fs.filter(([,v])=>v).map(([l,v])=>`<div class="sum-row"><span class="sum-l">${l}</span><span class="sum-v">${v}</span></div>`).join('');
+    return r?`<div class="sum-grp"><div class="sum-grp-t">${t}</div>${r}</div>`:'';
+  }).join('');
+}
+
+function toggleSB(){
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('open');
+}
+</script>
+</body>
+</html>
